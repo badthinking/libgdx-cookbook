@@ -18,17 +18,20 @@
 package com.packtpub.libgdx.canyonbunny.game;
 
 import com.badlogic.gdx.Application.ApplicationType;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
 import com.packtpub.libgdx.canyonbunny.game.objects.BunnyHead;
 import com.packtpub.libgdx.canyonbunny.game.objects.BunnyHead.JUMP_STATE;
 import com.packtpub.libgdx.canyonbunny.game.objects.Feather;
 import com.packtpub.libgdx.canyonbunny.game.objects.GoldCoin;
 import com.packtpub.libgdx.canyonbunny.game.objects.Rock;
+import com.packtpub.libgdx.canyonbunny.screens.DirectedGame;
 import com.packtpub.libgdx.canyonbunny.screens.MenuScreen;
+import com.packtpub.libgdx.canyonbunny.screens.transitions.ScreenTransition;
+import com.packtpub.libgdx.canyonbunny.screens.transitions.ScreenTransitionSlide;
 import com.packtpub.libgdx.canyonbunny.util.CameraHelper;
 import com.packtpub.libgdx.canyonbunny.util.Constants;
 
@@ -36,7 +39,7 @@ public class WorldController extends InputAdapter {
 
 	private static final String TAG = WorldController.class.getName();
 
-	private Game game;
+	private DirectedGame game;
 	public Level level;
 	public int lives;
 	public float livesVisual;
@@ -51,13 +54,12 @@ public class WorldController extends InputAdapter {
 
 	private float timeLeftGameOverDelay;
 
-	public WorldController (Game game) {
+	public WorldController (DirectedGame game) {
 		this.game = game;
 		init();
 	}
 
 	private void init () {
-		Gdx.input.setInputProcessor(this);
 		cameraHelper = new CameraHelper();
 		lives = Constants.LIVES_START;
 		livesVisual = lives;
@@ -246,7 +248,7 @@ public class WorldController extends InputAdapter {
 
 	private void backToMenu () {
 		// switch to menu screen
-		game.setScreen(new MenuScreen(game));
+		ScreenTransition transition = ScreenTransitionSlide.init(0.75f, ScreenTransitionSlide.DOWN, false, Interpolation.bounceOut);
+		game.setScreen(new MenuScreen(game), transition);
 	}
-
 }

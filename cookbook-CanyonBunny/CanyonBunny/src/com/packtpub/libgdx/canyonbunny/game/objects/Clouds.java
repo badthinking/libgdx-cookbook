@@ -82,14 +82,12 @@ public class Clouds extends AbstractGameObject {
 		Vector2 pos = new Vector2();
 		pos.x = length + 10; // position after end of level
 		pos.y += 1.75; // base position
-		// random additional position
-		pos.y += MathUtils.random(0.0f, 0.2f) * (MathUtils.randomBoolean() ? 1 : -1);
+		pos.y += MathUtils.random(0.0f, 0.2f) * (MathUtils.randomBoolean() ? 1 : -1); // random additional position
 		cloud.position.set(pos);
 		// speed
 		Vector2 speed = new Vector2();
 		speed.x += 0.5f; // base speed
-		// random additional speed
-		speed.x += MathUtils.random(0.0f, 0.75f);
+		speed.x += MathUtils.random(0.0f, 0.75f); // random additional speed
 		cloud.terminalVelocity.set(speed);
 		speed.x *= -1; // move left
 		cloud.velocity.set(speed);

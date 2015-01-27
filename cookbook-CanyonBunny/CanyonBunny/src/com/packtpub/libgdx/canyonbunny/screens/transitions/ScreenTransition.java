@@ -14,21 +14,16 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.packtpub.libgdx.canyonbunny;
 
-import android.os.Bundle;
+package com.packtpub.libgdx.canyonbunny.screens.transitions;
 
-import com.badlogic.gdx.backends.android.AndroidApplication;
-import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class MainActivity extends AndroidApplication {
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        
-        AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
-        cfg.useGL20 = true;
-        
-        initialize(new CanyonBunnyMain(), cfg);
-    }
+public interface ScreenTransition {
+
+	public float getDuration ();
+
+	public abstract void render (SpriteBatch batch, Texture currScreen, Texture nextScreen, float alpha);
+
 }
