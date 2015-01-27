@@ -33,6 +33,7 @@ public class Main {
 			settings.maxHeight = 1024;
 			settings.debug = drawDebugOutline;
 			TexturePacker2.process(settings, "assets-raw/images", "../CanyonBunny-android/assets/images", "canyonbunny.pack");
+			TexturePacker2.process(settings, "assets-raw/images-ui", "../CanyonBunny-android/assets/images", "canyonbunny-ui.pack");
 		}
 
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();

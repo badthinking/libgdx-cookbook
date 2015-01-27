@@ -14,28 +14,33 @@
  * limitations under the License.
  ******************************************************************************/
 
+package com.packtpub.libgdx.canyonbunny.util;
 
-package com.packtpub.libgdx.canyonbunny;
+import com.badlogic.gdx.graphics.Color;
 
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
-import com.packtpub.libgdx.canyonbunny.game.Assets;
-import com.packtpub.libgdx.canyonbunny.screens.MenuScreen;
+public enum CharacterSkin {
 
-public class CanyonBunnyMain extends Game {
+	WHITE("White", 1.0f, 1.0f, 1.0f),
+
+	GRAY("Gray", 0.7f, 0.7f, 0.7f),
+
+	BROWN("Brown", 0.7f, 0.5f, 0.3f);
+
+	private String name;
+	private Color color = new Color();
+
+	private CharacterSkin(String name, float r, float g, float b) {
+		this.name = name;
+		color.set(r, g, b, 1.0f);
+	}
 
 	@Override
-	public void create () {
-		// Set Libgdx log level
-		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+	public String toString() {
+		return name;
+	}
 
-		// Load assets
-		Assets.instance.init(new AssetManager());
-
-		// Start game at menu screen
-		setScreen(new MenuScreen(this));
+	public Color getColor() {
+		return color;
 	}
 
 }

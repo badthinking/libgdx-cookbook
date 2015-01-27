@@ -15,27 +15,37 @@
  ******************************************************************************/
 
 
-package com.packtpub.libgdx.canyonbunny;
+package com.packtpub.libgdx.canyonbunny.screens;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.packtpub.libgdx.canyonbunny.game.Assets;
-import com.packtpub.libgdx.canyonbunny.screens.MenuScreen;
 
-public class CanyonBunnyMain extends Game {
+public abstract class AbstractGameScreen implements Screen {
 
-	@Override
-	public void create () {
-		// Set Libgdx log level
-		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+	protected Game game;
 
-		// Load assets
+	public AbstractGameScreen (Game game) {
+		this.game = game;
+	}
+
+	public abstract void render (float deltaTime);
+
+	public abstract void resize (int width, int height);
+
+	public abstract void show ();
+
+	public abstract void hide ();
+
+	public abstract void pause ();
+
+	public void resume () {
 		Assets.instance.init(new AssetManager());
+	}
 
-		// Start game at menu screen
-		setScreen(new MenuScreen(this));
+	public void dispose () {
+		Assets.instance.dispose();
 	}
 
 }

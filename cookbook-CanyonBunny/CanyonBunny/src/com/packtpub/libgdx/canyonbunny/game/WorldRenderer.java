@@ -23,6 +23,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 import com.packtpub.libgdx.canyonbunny.util.Constants;
+import com.packtpub.libgdx.canyonbunny.util.GamePreferences;
 
 public class WorldRenderer implements Disposable {
 
@@ -73,7 +74,7 @@ public class WorldRenderer implements Disposable {
 		// draw extra lives icon + text (anchored to top right edge)
 		renderGuiExtraLive(batch);
 		// draw FPS text (anchored to bottom right edge)
-		renderGuiFpsCounter(batch);
+		if (GamePreferences.instance.showFpsCounter) renderGuiFpsCounter(batch);
 		// draw game over text
 		renderGuiGameOverMessage(batch);
 
@@ -107,7 +108,7 @@ public class WorldRenderer implements Disposable {
 	}
 
 	private void renderGuiExtraLive (SpriteBatch batch) {
-		float x = cameraGUI.viewportWidth - 50 - Constants.LIVES_START * 50;
+ 		float x = cameraGUI.viewportWidth - 50 - Constants.LIVES_START * 50;
 		float y = -15;
 		for (int i = 0; i < Constants.LIVES_START; i++) {
 			if (worldController.lives <= i) batch.setColor(0.5f, 0.5f, 0.5f, 0.5f);
@@ -150,7 +151,7 @@ public class WorldRenderer implements Disposable {
 	public void resize (int width, int height) {
 		camera.viewportWidth = (Constants.VIEWPORT_HEIGHT / (float)height) * (float)width;
 		camera.update();
-  		cameraGUI.viewportHeight = Constants.VIEWPORT_GUI_HEIGHT;
+		cameraGUI.viewportHeight = Constants.VIEWPORT_GUI_HEIGHT;
 		cameraGUI.viewportWidth = (Constants.VIEWPORT_GUI_HEIGHT / (float)height) * (float)width;
 		cameraGUI.position.set(cameraGUI.viewportWidth / 2, cameraGUI.viewportHeight / 2, 0);
 		cameraGUI.update();
