@@ -63,7 +63,7 @@ public abstract class DirectedGame implements ApplicationListener {
 	@Override
 	public void render () {
         // get delta time and ensure an upper limit of one 60th second
-        float deltaTime = Math.min(Gdx.graphics.getDeltaTime(), 1.0f / 60.0f);
+		float deltaTime = Math.min(Gdx.graphics.getDeltaTime(), 1.0f / 60.0f);
 		if (nextScreen == null) {
 			// no ongoing transition
 			if (currScreen != null) currScreen.render(deltaTime);
