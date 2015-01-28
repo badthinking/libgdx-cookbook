@@ -8,18 +8,17 @@ import java.util.Set;
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.forsrc.client.handler.ForClientIoHandler;
-
-import com.mygdx.java.common.data.GdxData;
 import com.mygdx.java.common.data.Message;
 import com.mygdx.java.utils.ImageUtils;
 
 public class ForServerIoHandler implements IoHandler {
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(ForClientIoHandler.class);
+			.getLogger(ForServerIoHandler.class);
 
 	private final Set<IoSession> sessions = Collections
 			.synchronizedSet(new HashSet<IoSession>());
@@ -44,18 +43,22 @@ public class ForServerIoHandler implements IoHandler {
 			LOGGER.info("messageReceived | " + getAddress(iosession) + " | "
 					+ iosession.getId() + " | Message | " + obj);
 			Message message = (Message) obj;
-			if (message.getType() == Message.GET_DATA) {
-				System.out.println("---->");
-				GdxData gdxData = new GdxData(message.getId(),
-						ImageUtils.getScreenBufferedImageBytes(),
-						System.currentTimeMillis());
-				iosession.write(gdxData);
+			if (message.getType() == Message.CLIENT_GET_DATA) {
+				System.out.println("---->" + message);
+				Message data = new Message(message.getId(),
+						Message.SERVER_SEND_DATA,
+						ImageUtils.getScreenBufferedImageBytes());
+				ObjectMapper objectMapper = new ObjectMapper();
+				JsonNode jsonNode = objectMapper.readTree(data.toString());
+				System.out.println(data.toString() + " sha1 = "
+						+ jsonNode.path("sha1"));
+				iosession.write(data);
 				return;
 			}
 
 			if (message.getType() == Message.QUIT) {
-				iosession.write(new Message(iosession.getId(),
-						Message.SEND_DATA, "ClientQuitOK".getBytes()));
+				iosession.write(new Message(iosession.getId(), Message.QUIT,
+						"ClientQuitOK".getBytes()));
 				LOGGER.info("ClientQuit");
 				iosession.close(true);
 				return;

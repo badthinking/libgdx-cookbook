@@ -4,7 +4,7 @@ import org.apache.mina.handler.chain.IoHandlerChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.forsrc.client.handler.ForClientIoHandler;
+import com.mygdx.java.client.handler.ForClientIoHandler;
 
 public class ForServerIoHandlerCommand extends IoHandlerChain {
 	private static final Logger LOGGER = LoggerFactory

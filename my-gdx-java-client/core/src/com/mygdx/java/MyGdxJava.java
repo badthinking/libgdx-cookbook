@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.security.GeneralSecurityException;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
@@ -31,34 +32,27 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.PropertiesUtils;
 import com.mygdx.java.client.ForClient;
-import com.mygdx.java.client.handler.ForClientIoHandler;
 import com.mygdx.java.client.impl.ForClientImpl;
-import com.mygdx.java.common.data.GdxData;
 import com.mygdx.java.common.data.Message;
-import com.mygdx.java.constant.Constants;
 import com.mygdx.java.utils.ImageUtils;
 import com.mygdx.java.utils.IoFilterChainBuilderUtils;
+import com.mygdx.java.utils.JsonUtils;
 
 public class MyGdxJava extends Game {
 
 	SpriteBatch batch;
 	TextureRegion region;
+	Texture image;
 	ForClient client;
 
 	@Override
 	public void create() {
+		image = null;
 		Gdx.app.postRunnable(new Runnable() {
 
 			@Override
@@ -149,11 +143,15 @@ public class MyGdxJava extends Game {
 	public void render() {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		// getData();
-		batch.begin();
-		batch.draw(region, 0, 0, Gdx.graphics.getWidth(),
-				Gdx.graphics.getHeight());
-		batch.end();
+		getData();
+		if (image != null) {
+			batch.begin();
+			batch.draw(image, 0, 0, Gdx.graphics.getWidth(),
+					Gdx.graphics.getHeight());
+			batch.end();
+			image.dispose();
+			image = null;
+		}
 
 	}
 
@@ -173,7 +171,8 @@ public class MyGdxJava extends Game {
 				client.getConnectFuture()
 						.getSession()
 						.write(new Message(System.currentTimeMillis(),
-								Message.GET_DATA, "Test get image".getBytes()));
+								Message.CLIENT_GET_DATA, "Test get image"
+										.getBytes()));
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
@@ -190,7 +189,7 @@ public class MyGdxJava extends Game {
 		// client.getIoConnector().setConnectTimeoutMillis(1000 * 2);
 		DefaultIoFilterChainBuilder chain = client.getIoConnector()
 				.getFilterChain();
-		//IoFilterChainBuilderUtils.addClientSslFilter(chain);
+		// IoFilterChainBuilderUtils.addClientSslFilter(chain);
 
 		IoFilterChainBuilderUtils.addObjectSerializationCodec(chain);
 
@@ -199,11 +198,23 @@ public class MyGdxJava extends Game {
 			@Override
 			public void messageReceived(IoSession session, Object message)
 					throws Exception {
-				if (message instanceof GdxData) {
-					GdxData gdxData = (GdxData) message;
-					System.out.println("---->" + gdxData);
+				if (message instanceof Message) {
+					Message data = (Message) message;
+					System.out.println("---->" + data);
+					String sha1Message = JsonUtils.getValuse(
+							message.toString(), "sha1");
+					String sha1 = new String(
+							DigestUtils.sha1Hex(data.getData()));
+
+					if (sha1 == null || sha1Message == null
+							|| !sha1.equals(sha1Message.replace("\"", ""))) {
+						System.out.println("sha1 not same:" + sha1 + " : "
+								+ sha1Message);
+						return;
+					}
 					ImageUtils.setScreenTextureRegionInThread(region,
-							gdxData.getBytes());
+							data.getData());
+					image = region.getTexture();
 				}
 			}
 		});

@@ -1,4 +1,4 @@
-package com.forsrc.client.impl;
+package com.mygdx.java.client.impl;
 
 import java.net.InetSocketAddress;
 
@@ -9,7 +9,7 @@ import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.forsrc.client.ForClient;
+import com.mygdx.java.client.ForClient;
 import com.mygdx.java.common.data.Message;
 
 public class ForClientImpl implements ForClient {

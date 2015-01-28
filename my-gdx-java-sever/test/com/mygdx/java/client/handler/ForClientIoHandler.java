@@ -1,14 +1,17 @@
-package com.forsrc.client.handler;
+package com.mygdx.java.client.handler;
 
 import java.net.InetSocketAddress;
 
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.util.JSONPObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mygdx.java.common.data.GdxData;
 import com.mygdx.java.common.data.Message;
 
 public class ForClientIoHandler implements IoHandler {
@@ -42,10 +45,11 @@ public class ForClientIoHandler implements IoHandler {
 				iosession.close(true);
 				return;
 			}
-		}
-		if (obj instanceof GdxData) {
-			GdxData gdxData = (GdxData) obj;
-			System.out.println("---->" + gdxData);
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonNode = objectMapper.readTree(message.toString());
+
+			System.out.println("---->" + message + " sha1 = "
+					+ jsonNode.path("sha1"));
 		}
 	}
 

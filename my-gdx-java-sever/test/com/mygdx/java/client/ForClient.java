@@ -1,4 +1,4 @@
-package com.forsrc.client;
+package com.mygdx.java.client;
 
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.service.IoConnector;

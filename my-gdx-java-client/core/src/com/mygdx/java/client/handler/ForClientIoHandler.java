@@ -6,11 +6,9 @@ import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 
-import com.mygdx.java.common.data.GdxData;
 import com.mygdx.java.common.data.Message;
 
 public class ForClientIoHandler implements IoHandler {
-
 
 	@Override
 	public void exceptionCaught(IoSession iosession, Throwable throwable)
@@ -28,8 +26,8 @@ public class ForClientIoHandler implements IoHandler {
 
 		System.out.println("--->" + (obj instanceof Message));
 		if (obj instanceof Message) {
-			System.out.println("messageReceived | " + getAddress(iosession) + " | "
-					+ iosession.getId() + " | Message | " + obj);
+			System.out.println("messageReceived | " + getAddress(iosession)
+					+ " | " + iosession.getId() + " | Message | " + obj);
 			Message message = (Message) obj;
 
 			if (message.getType() == Message.QUIT) {
@@ -39,19 +37,17 @@ public class ForClientIoHandler implements IoHandler {
 				iosession.close(true);
 				return;
 			}
+			System.out.println("---->" + message);
 		}
-		if (obj instanceof GdxData) {
-			GdxData gdxData = (GdxData) obj;
-			System.out.println("---->" + gdxData);
-		}
+
 	}
 
 	@Override
 	public void messageSent(IoSession iosession, Object obj) throws Exception {
 		System.out.println("messageSent | " + iosession.getId() + " | " + obj);
 		if (obj instanceof Message) {
-			System.out.println("messageReceived | " + getAddress(iosession) + " | "
-					+ iosession.getId() + " | Message | " + obj);
+			System.out.println("messageReceived | " + getAddress(iosession)
+					+ " | " + iosession.getId() + " | Message | " + obj);
 		}
 	}
 
@@ -72,7 +68,8 @@ public class ForClientIoHandler implements IoHandler {
 	@Override
 	public void sessionIdle(IoSession iosession, IdleStatus idlestatus)
 			throws Exception {
-		System.out.println("sessionIdle | " + iosession.getId() + " | " + idlestatus);
+		System.out.println("sessionIdle | " + iosession.getId() + " | "
+				+ idlestatus);
 		iosession.close(true);
 	}
 

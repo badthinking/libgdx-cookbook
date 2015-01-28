@@ -1,14 +1,14 @@
-package com.forsrc.client.main;
+package com.mygdx.java.client.main;
 
 import java.net.InetSocketAddress;
 
 import org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder;
 import org.apache.mina.core.session.IdleStatus;
 
-import com.forsrc.client.ForClient;
-import com.forsrc.client.handler.ForClientIoHandler;
-import com.forsrc.client.impl.ForClientImpl;
 
+import com.mygdx.java.client.ForClient;
+import com.mygdx.java.client.handler.ForClientIoHandler;
+import com.mygdx.java.client.impl.ForClientImpl;
 import com.mygdx.java.common.data.Message;
 import com.mygdx.java.utils.IoFilterChainBuilderUtils;
 
@@ -19,7 +19,7 @@ public class ForClientMain {
 		// client.getIoConnector().setConnectTimeoutMillis(1000 * 2);
 		DefaultIoFilterChainBuilder chain = client.getIoConnector()
 				.getFilterChain();
-		IoFilterChainBuilderUtils.addClientSslFilter(chain);
+		//IoFilterChainBuilderUtils.addClientSslFilter(chain);
 
 		IoFilterChainBuilderUtils.addObjectSerializationCodec(chain);
 
@@ -35,8 +35,8 @@ public class ForClientMain {
 		for (int i = 0; i < 20; i++) {
 			client.getConnectFuture()
 					.getSession()
-					.write(new Message(i,
-							Message.GET_DATA, "Test get image".getBytes()));
+					.write(new Message(i, Message.CLIENT_GET_DATA,
+							"Test get image".getBytes()));
 		}
 
 		client.stop();
