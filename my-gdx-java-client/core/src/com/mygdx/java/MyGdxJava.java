@@ -36,6 +36,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
 import com.mygdx.java.client.ForClient;
 import com.mygdx.java.client.impl.ForClientImpl;
 import com.mygdx.java.common.data.Message;
@@ -49,6 +51,7 @@ public class MyGdxJava extends Game {
 	TextureRegion region;
 	Texture image;
 	ForClient client;
+	Timer timer;
 
 	@Override
 	public void create() {
@@ -137,6 +140,17 @@ public class MyGdxJava extends Game {
 				return false;
 			}
 		});
+
+		// timer = new Timer();
+		// Task task = new Task() {
+		// @Override
+		// public void run() {
+		// // getData();
+		//
+		// }
+		// };
+		// timer.scheduleTask(task, 0.01f, 0.01f);
+		// timer.start();
 	}
 
 	@Override
@@ -144,14 +158,10 @@ public class MyGdxJava extends Game {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		getData();
-		if (image != null) {
-			batch.begin();
-			batch.draw(image, 0, 0, Gdx.graphics.getWidth(),
-					Gdx.graphics.getHeight());
-			batch.end();
-			image.dispose();
-			image = null;
-		}
+		batch.begin();
+		batch.draw(region, 0, 0, Gdx.graphics.getWidth(),
+				Gdx.graphics.getHeight());
+		batch.end();
 
 	}
 
@@ -208,33 +218,38 @@ public class MyGdxJava extends Game {
 
 					if (sha1 == null || sha1Message == null
 							|| !sha1.equals(sha1Message.replace("\"", ""))) {
-						System.out.println("sha1 not same:" + sha1 + " : "
+						System.out.println("sha1 not same:" + sha1 + " <---> "
 								+ sha1Message);
 						return;
 					}
 					ImageUtils.setScreenTextureRegionInThread(region,
 							data.getData());
-					image = region.getTexture();
+					// image = region.getTexture();
 				}
 			}
 		});
 		client.getIoConnector().getSessionConfig()
-				.setReadBufferSize(1024 * 512);
+				.setReadBufferSize(1024 * 128);
 		client.getIoConnector().getSessionConfig()
 				.setIdleTime(IdleStatus.BOTH_IDLE, 2);
 		client.start();
-		client.getConnectFuture().getSession().setAttribute("Type", "MSG");
-		client.getConnectFuture().getSession().write("Test2 OK");
 
 	}
 
 	@Override
 	public void dispose() {
-		region.getTexture().dispose();
+		if (timer != null) {
+			timer.stop();
+		}
+		Texture temp = region.getTexture();
+		if (temp != null) {
+			temp.dispose();
+		}
 		batch.dispose();
 		try {
-			client.shutdown();
-
+			if (client != null) {
+				client.shutdown();
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

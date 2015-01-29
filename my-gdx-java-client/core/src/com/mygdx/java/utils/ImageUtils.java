@@ -17,28 +17,15 @@
  */
 package com.mygdx.java.utils;
 
-import java.awt.AWTException;
-import java.awt.Dimension;
-import java.awt.Rectangle;
-import java.awt.Robot;
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Blending;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class ImageUtils {
 
-	public static void setScreenTextureRegion(
-			final TextureRegion textureRegion, byte[] bytes) {
+	public static void setScreenTextureRegion(TextureRegion textureRegion,
+			byte[] bytes) {
 
 		if (textureRegion == null) {
 			throw new IllegalArgumentException(
@@ -47,6 +34,7 @@ public class ImageUtils {
 		Texture tempTexture = textureRegion.getTexture();
 		if (tempTexture != null) {
 			tempTexture.dispose();
+			tempTexture = null;
 		}
 
 		Pixmap pixmap = new Pixmap(bytes, 0, bytes.length);
@@ -83,8 +71,9 @@ public class ImageUtils {
 				Pixmap pixmap = new Pixmap(bytes, 0, bytes.length);
 				int width = pixmap.getWidth();
 				int height = pixmap.getHeight();
-				//pixmap.setBlending(Blending.None);
-				//Texture texture = new Texture(width, height, pixmap.getFormat());
+				// pixmap.setBlending(Blending.None);
+				// Texture texture = new Texture(width, height,
+				// pixmap.getFormat());
 				Texture texture = new Texture(pixmap, true);
 				texture.draw(pixmap, 0, 0);
 				textureRegion.setTexture(texture);

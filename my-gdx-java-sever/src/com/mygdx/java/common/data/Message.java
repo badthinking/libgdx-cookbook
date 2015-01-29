@@ -1,6 +1,9 @@
 package com.mygdx.java.common.data;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.codehaus.jackson.node.JsonNodeFactory;
@@ -81,6 +84,11 @@ public class Message implements Serializable {
 		// : this.data.length, this.time,
 		// this.info == null ? "" : info);
 		ObjectNode objectNode = new ObjectNode(JsonNodeFactory.instance);
+
+		Date date = new Date(this.time);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss.SSS");
+		objectNode.put("date", simpleDateFormat.format(date));
 		objectNode.put("id", this.id);
 		objectNode.put("type", this.time);
 		objectNode.put("length", this.data == null ? 0 : this.data.length);
